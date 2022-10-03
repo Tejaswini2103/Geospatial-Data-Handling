@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.2.1/css/ol.css" type="text/css">
+    <style>
+      .map {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.2.1/build/ol.js"></script>
+    <title>Random Points From Code</title>
+  </head>
+  <body>
+    <h2>Coordinates</h2>
+    <div id="map" class="map"></div>
+    <script type="text/javascript">
+      var list = []
+      var Home = [-122.0098060678788,37.56061249601967];
+      var MomoKebab = [-122.01015336786747,37.560099885672805];
+      var WashingtonHighSchool = [-121.99495634781623,37.55293035424841];
+      var CarlsJunior = [-122.01113575841782,37.560939520980405];
+      var JackInTheBox = [-122.01282769892865,37.56148740245777];
+      var Apollo_tutoring = [-122.01482541036073,37.56295006843806];
+      var Texaco_GasStation = [-122.01249111284427,37.56043703523301];
+      var Sprouts_Farmers_Market = [-121.98700909038935,37.549224137252594];
+      var Saravana_Bhavan = [-121.98626121300316,37.55038959499972];
+      var StateBankOfIndia = [-121.98043936016235,37.553962496710405];
+      var Washington_hospital = [-121.98183589069164,37.55454625246396];
+      var Fremont_CentralDowntown = [-121.98497338564772,37.55187316713743];
+      var Fremont_Centerville = [-121.98837150715978,37.549257839309995];
+      list[0]=Home;
+      list[1]=MomoKebab;
+      list[2]=WashingtonHighSchool;
+      list[3]=CarlsJunior;
+      list[4]=JackInTheBox;
+      list[5]=Apollo_tutoring;
+      list[6]=Texaco_GasStation;
+      list[7]=Sprouts_Farmers_Market;
+      list[8]=Saravana_Bhavan;
+      list[9]=StateBankOfIndia;
+      list[10]=Washington_hospital;
+      list[11]=Fremont_CentralDowntown;
+      list[12]=Fremont_Centerville;
+      localStorage.setItem("myData",JSON.stringify(list));
+      var dataStored = JSON.parse(localStorage.getItem("myData"));
+      // verify that we fetched our data correctly
+      console.log(dataStored); 
+
+      for(var indx in list) { // indx is 0,1,2...
+        console.log(list[indx][0] +" "+list[indx][1]); // this could be a single point
+      }
+
+      const getRandomNumber = function (min, ref) {
+        return Math.random() * ref + min;
+      }
+      const features = [];
+      for(var indx in list) { 
+        features.push(new ol.Feature({
+          geometry: new ol.geom.Point(ol.proj.fromLonLat([list[indx][0],list[indx][1]]))
+        }));
+      }
+      // create the source and layer for random features
+      const vectorSource = new ol.source.Vector({
+        features
+      });
+      const vectorLayer = new ol.layer.Vector({
+        source: vectorSource,
+        style: new ol.style.Style({
+          image: new ol.style.Circle({
+            radius: 2,
+            fill: new ol.style.Fill({color: 'red'})
+          })
+        })
+      });
+      // create map and add layers
+      const map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          }),
+          vectorLayer
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([-122.0098060678788,37.56061249601967]),
+          zoom: 14
+        })
+      });
+    </script>
+  </body>
+</html>
